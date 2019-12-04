@@ -1,6 +1,6 @@
 %error-verbose
 %locations
-/*声明部分*/
+//声明部分
 %{
 #include "stdio.h"
 #include "math.h"
@@ -13,7 +13,7 @@ void yyerror(const char* fmt, ...);
 void display(struct node *,int);
 %}
 
-/*辅助声明部分,union将各种类型统一起来*/
+//辅助声明部分,union将各种类型统一起来
 %union {
   int type_int;
   float type_float;
@@ -29,14 +29,11 @@ void display(struct node *,int);
 */
 %type <ptr> program ExtDefList ExtDef Specifier ExtDecList FuncDec CompSt VarList VarDec ParamDec Stmt StmList DefList Def DecList Dec Exp Args
 
-
+//%token定义终结符的语义值类型
 /*
-%token定义终结符的语义值类型
 %token <type_id> ID，表示识别出来一个标识符后，标识符的字符串串值保存在成员 type_id 
-
-用bison对该文件编译时,带参数-d,生成的exp.tab.h中给这些单词进行编码,可在lex.l中包含parser.tab.h使用这些单词种类码
 */
-
+//用bison对该文件编译时,带参数-d,生成的exp.tab.h中给这些单词进行编码,可在lex.l中包含parser.tab.h使用这些单词种类码
 %token <type_int> INT //指定INT的语义值是type_int,由词法分析得到的数值
 %token <type_id> ID RELOP TYPE //指定ID,RELOP 的语义值是type_id,由词法分析得到的标识符字符串
 %token <type_float> FLOAT //指定ID的语义值是type_id,由词法分析得到的标识符字符串
@@ -60,7 +57,7 @@ void display(struct node *,int);
 Exp:  Exp ASSIGNOP Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno); } 
 规则后面{}中的是当完成归约时要执行的语义动作。规则左部的 Exp 的属性值用$$表示，右部有 2 个 Exp，位置序号分别是 1 和 3，其属性值分别用$1 和$3表示
 
-Stmt(statement) →error SEMI 表示对语句分析时，一旦有错，跳过分号（SEMI），继续进行语法分析
+Stmt(statement) → error SEMI 表示对语句分析时，一旦有错，跳过分号（SEMI），继续进行语法分析
 */
 %%
 program: ExtDefList { display($1,0); semantic_Analysis0($1);} /*显示语法树,语义分析*/
@@ -88,6 +85,7 @@ VarList: ParamDec {$$=mknode(PARAM_LIST,$1,NULL,NULL,yylineno);}
 ParamDec: Specifier VarDec {$$=mknode(PARAM_DEC,$1,$2,NULL,yylineno);}
           ;
 CompSt: LC DefList StmList RC {$$=mknode(COMP_STM,$2,$3,NULL,yylineno);}
+        | error RC {$$=NULL; }
         ;
 StmList: {$$=NULL; }
          | Stmt StmList {$$=mknode(STM_LIST,$1,$2,NULL,yylineno);}
@@ -98,6 +96,7 @@ Stmt: Exp SEMI {$$=mknode(EXP_STMT,$1,NULL,NULL,yylineno);}
       | IF LP Exp RP Stmt %prec LOWER_THEN_ELSE {$$=mknode(IF_THEN,$3,$5,NULL,yylineno);}
       | IF LP Exp RP Stmt ELSE Stmt {$$=mknode(IF_THEN_ELSE,$3,$5,$7,yylineno);}
       | WHILE LP Exp RP Stmt {$$=mknode(WHILE,$3,$5,NULL,yylineno);}
+      | error SEMI {$$=NULL; }
       ;
 DefList: {$$=NULL; }
          | Def DefList {$$=mknode(DEF_LIST,$1,$2,NULL,yylineno);}
@@ -127,6 +126,7 @@ Exp: Exp ASSIGNOP Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_i
      | INT {$$=mknode(INT,NULL,NULL,NULL,yylineno);$$->type_int=$1;$$->type=INT;}
      | FLOAT {$$=mknode(FLOAT,NULL,NULL,NULL,yylineno);$$->type_float=$1;$$->type=FLOAT;}
      | CHAR {$$=mknode(CHAR,NULL,NULL,NULL,yylineno); $$->type_char=$1;$$->type=CHAR;}
+     | error RP {$$=NULL; }
      ;
 Args: Exp COMMA Args {$$=mknode(ARGS,$1,$3,NULL,yylineno);}
       | Exp {$$=mknode(ARGS,$1,NULL,NULL,yylineno);}
