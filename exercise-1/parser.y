@@ -1,6 +1,6 @@
 %error-verbose
 %locations
-//声明部分
+/*声明部分*/
 %{
 #include "stdio.h"
 #include "math.h"
@@ -13,7 +13,7 @@ void yyerror(const char* fmt, ...);
 void display(struct node *,int);
 %}
 
-//辅助声明部分,union将各种类型统一起来
+/*辅助声明部分,union将各种类型统一起来*/
 %union {
   int type_int;
   float type_float;
@@ -29,11 +29,14 @@ void display(struct node *,int);
 */
 %type <ptr> program ExtDefList ExtDef Specifier ExtDecList FuncDec CompSt VarList VarDec ParamDec Stmt StmList DefList Def DecList Dec Exp Args
 
-//%token定义终结符的语义值类型
+
 /*
+%token定义终结符的语义值类型
 %token <type_id> ID，表示识别出来一个标识符后，标识符的字符串串值保存在成员 type_id 
+
+用bison对该文件编译时,带参数-d,生成的exp.tab.h中给这些单词进行编码,可在lex.l中包含parser.tab.h使用这些单词种类码
 */
-//用bison对该文件编译时,带参数-d,生成的exp.tab.h中给这些单词进行编码,可在lex.l中包含parser.tab.h使用这些单词种类码
+
 %token <type_int> INT //指定INT的语义值是type_int,由词法分析得到的数值
 %token <type_id> ID RELOP TYPE //指定ID,RELOP 的语义值是type_id,由词法分析得到的标识符字符串
 %token <type_float> FLOAT //指定ID的语义值是type_id,由词法分析得到的标识符字符串
