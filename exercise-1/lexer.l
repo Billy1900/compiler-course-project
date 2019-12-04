@@ -54,13 +54,17 @@ char \"(\\.|[^"\\])*\"
 [\n] {yycolumn=1;}
 [\r\t] {}
 . {printf("Error type A: Mysterious character\"%s\"\n\n at line %d\n",yytext,yylineno);}
- /*注释处理*/
-//[.]* {}
-"/*"([^\*]|(\*)*[^\*/])*(\*)*"*/" {}
+ /*注释处理 单行+多行*/
+"//".* {}
+[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/] {}
 
 %%
 /* 复制到lex.yy.c中*/
-void main(){
+void main(int argc,char *argv[]){
     yylex();
     return 0;
+}
+
+int yywrap(){
+    return 1;
 }
