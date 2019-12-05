@@ -20,14 +20,16 @@
 id [A-Za-z][A-Za-z0-9]*
 int [0-9]+
 float ([0-9]*\.[0-9]+)|([0-9]+\.)
-char \"(\\.|[^"\\])*\"
+
 
 /*规则部分：正规表达式+动作， 词法分析器识别出一个单词后，将该单词对应的字符串保存在 yytext中，其长度为yyleng*/
 /* 通过yylval.type_int=atoi(yytext);将整常数的值保存在yylval的成员type_in中，这里 yylval 是一个 Flex 和 Bison 共用的内部变量，类型为 YYLVAL，按这样的方式，在 Flex 中通过 yylval 的成员保存单词属性值，在 Bison 中就可以通过yylval 的成员取出属性值，实现了数据的传递*/
 %%
+ /*注释处理 单行+多行*/
+\/\/[^\n]*  {;}//匹配注释的正则表达式
+\/\*(\s|.)*?\*\/ {;}//匹配注释的正则表达式
 {int} {yylval.type_int=atoi(yytext);return INT;}
 {float} {yylval.type_float=atof(yytext); return FLOAT;}
-{char} {yylval.type_char=yytext; return CHAR}
 "int" {strcpy(yylval.type_id,yytext); return TYPE;}
 "float" {strcpy(yylval.type_id,yytext); return TYPE;}
 "char" {strcpy(yylval.type_id,yytext); return TYPE;}
@@ -35,13 +37,19 @@ char \"(\\.|[^"\\])*\"
 "if" {return IF;}
 "else" {return ELSE;}
 "while" {return WHILE;}
+"for" {return FOR;}
 {id} {strcpy(yylval.type_id,yytext); return ID;}
+
 ";" {return SEMI;}
 "," {return COMMA;}
-">" | "<" | ">=" | "<=" | "==" | "!=" {strcpy(yylval.type_id,yytext); return RELOP;}
+">"|"<"|">="|"<="|"=="|"!=" {strcpy(yylval.type_id,yytext); return RELOP;}
 "=" {return ASSIGNOP;}
 "+" {return PLUS;}
 "-" {return MINUS;}
+"+=" {return COMADD;}
+"-=" {return COMSUB;}
+"++" {return AUTOADD;}
+"--" {return AUTOSUB;}
 "*" {return STAR;}
 "/" {return DIV;}
 "&&" {return AND;}
@@ -49,22 +57,22 @@ char \"(\\.|[^"\\])*\"
 "!" {return NOT;}
 "(" {return LP;}
 ")" {return RP;}
+"[" {return LB;}
+"]" {return RB;}
 "{" {return LC;}
 "}" {return RC;}
 [\n] {yycolumn=1;}
-[\r\t] {}
-. {printf("Error type A: Mysterious character\"%s\"\n\n at line %d\n",yytext,yylineno);}
- /*注释处理 单行+多行*/
-"//".* {}
-[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/] {}
+[ \r\t] {;}
+.   {printf("Error type A: Mysterious character\"%s\" at line %d,column %d\n",yytext,yylineno,yycolumn);}
+
 
 %%
-/* 复制到lex.yy.c中*/
+/* 复制到lex.yy.c中,冲突不能用了
 void main(int argc,char *argv[]){
     yylex();
-    return 0;
+    return;
 }
-
+*/
 int yywrap(){
     return 1;
 }
