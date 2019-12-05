@@ -11,7 +11,6 @@
 ## 编译流程
 flex lexer.l//生成lexer.yy.c
 bison -d -v parser.y//生成parser.tab.h, parser.tab.c 
-gcc -o parserast.c paerser.tabc lex.yy.c -lfl -o test1
-./test1 finaltest.c
-
+gcc display.c parser.tab.c lex.yy.c -lfl -o test1
+./test1 test.c
 </pre>
