@@ -4,7 +4,11 @@
 #include "stdarg.h"
 #include "parser.tab.h"
 
-enum node_kind { EXT_DEF_LIST,EXT_VAR_DEF,FUNC_DEF,FUNC_DEC,EXT_DEC_LIST,PARAM_LIST,PARAM_DEC,VAR_DEF,DEC_LIST,DEF_LIST,COMP_STM,STM_LIST,EXP_STMT,IF_THEN,IF_THEN_ELSE,FUNC_CALL,ARGS,FUNCTION,PARAM,ARG,CALL,LABEL,GOTO,JLT,JLE,JGT,JGE,EQ,NEQ};
+enum node_kind { EXT_DEF_LIST,EXT_VAR_DEF,FUNC_DEF,FUNC_DEC,EXT_DEC_LIST,
+                 PARAM_LIST,PARAM_DEC,VAR_DEF,DEC_LIST,DEF_LIST,COMP_STM,
+                 STM_LIST,EXP_STMT,IF_THEN,IF_THEN_ELSE,FUNC_CALL,ARGS,FUNCTION,
+                 PARAM,ARG,CALL,LABEL,GOTO,JLT,JLE,JGT,JGE,EQ,NEQ,
+                 AUTOADD_L,AUTOADD_R,AUTOSUB_L,AUTOSUB_R,ARRAY_DEF,ARRAY_DEC,ARRAY};
 #define MAXLENGTH 1000 //定义符号表的大小
 #define DX 3*sizeof(int)//活动记录控制信息需要的单元数
 
@@ -74,58 +78,9 @@ struct symbol_scope_begin {
   int top;
 }symbol_scope_TX;
 
-struct node *mknode(int kind,struct node *first,struct node *second, struct node *third,int pos ){
-  struct node *tempnode = (struct node*)malloc(sizeof(struct node));
-  tempnode->kind = kind;
-  tempnode->ptr[0] = first;
-  tempnode->ptr[1] = second;
-  tempnode->ptr[2] = third;
-  tempnode->pos = pos;
-  return tempnode;
-}
-
-//先根遍历
-void display(struct node *,int){
-  if (node != NULL)
-  {
-    switch (node->kind)
-    {
-    case EXT_VAR_DEF: printf("External Variable definition: \n");
-                      printf("  Type: s%\n",node->type_id);
-                      printf("  Variable name:\n");
-                      printf("")
-                      break;
-    case FUNC_DEF: printf("Function definition:\n");break;
-    //case FUNC_DEC: printf("Function declaration: \n");break;
-    case EXT_DEC_LIST: printf("External declaration list:\n");break;
-    case PARAM_LIST: printf("Parameter list:\n");break;
-    case PARAM_DEC: printf("Parameter declaration:\n");break;
-    case VAR_DEF: printf("Variable definition:\n");break;
-    case DEC_LIST: printf("Declaration list:\n");break;
-    case DEF_LIST: printf("Definition list:\n");break;
-    case COMP_STM: printf("Composite statement:\n");break;
-    case STM_LIST: printf("Statement list:\n");break;
-    case EXP_STMT: printf("Expression statement:\n");break;
-    case IF_THEN: printf("If then:\n");break;
-    case IF_THEN_ELSE: printf("If then else: \n");break;
-    case FUNC_CALL: printf("Function call:\n");break;
-    case ARGS:
-    case FUNCTION:
-    case PARAM:
-    case ARG:
-    case CALL:
-    case LABEL:
-    case GOTO:
-    case JLT:
-    case JLE:
-    case JGT:
-    case JGE:
-    case EQ:
-    case NEQ:
-    default:
-      break;
-    }
-  }
-  
-  
-}
+struct node *mknode(int kind,struct node *first,struct node *second, struct node *third,int pos );
+void semantic_Analysis0(struct node *T);
+void semantic_Analysis(struct node *T);
+void boolExp(struct node *T);
+void Exp(struct node *T);
+void objectCode(struct codenode *head);
