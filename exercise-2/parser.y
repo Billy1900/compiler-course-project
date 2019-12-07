@@ -63,7 +63,7 @@ Stmt(statement) → error SEMI 表示对语句分析时，一旦有错，跳过�
 */
 
 %%
-program: ExtDefList { display($1,0);semantic_Analysis0($1);} /*归约到program，开始显示语法树,语义分析*/
+program: ExtDefList { display($1,0);Semantic_Analysis($1,0,0,' ',0);} /*归约到program，开始显示语法树,语义分析*/
          ;
 /*ExtDefList：外部定义列表，即是整个语法树*/
 ExtDefList: {$$=NULL;}/*整个语法树为空*/
