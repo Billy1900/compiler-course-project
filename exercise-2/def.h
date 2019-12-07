@@ -53,7 +53,7 @@ struct node {//以下对结点属性定义没有考虑存储效率,只是简单�
   int width; //各种数据占用的字节数
 };
 
-struct symbol {//这里只列出了一个符号表项的部分属性,没考虑属性间的互斥
+typedef struct symbol {//这里只列出了一个符号表项的部分属性,没考虑属性间的互斥
   char name[33];//变量或函数名
   int level;//层号,外部变量名或函数名层号为0,形参名为1,每到1个复合语句层号加1,退出减1
   int type; //变量类型或函数返回值类型
@@ -65,22 +65,22 @@ struct symbol {//这里只列出了一个符号表项的部分属性,没考虑�
 };
 
 //符号表,是一个顺序栈,index初值为0
-struct symboltable{
+typedef struct symboltable{
   struct symbol symbols[MAXLENGTH];
   int index;
-} symbolTable;
+}SYMBOLTABLE;
 
 /*当前作用域的符号在符号表的起始位置序号,这是一个栈结构,每到达一个
 复合语句,将符号表的index值进栈,离开复合语句时,取其退栈值修改符号表的index值,完成删除该复
 合语句中的所有变量和临时变量*/
-struct symbol_scope_begin {
+typedef struct symbol_scope_begin {
   int TX[30];
   int top;
-}symbol_scope_TX;
+}SYMBOL_SCOPE_TX;
 
 struct node *mknode(int kind,struct node *first,struct node *second, struct node *third,int pos );
-void semantic_Analysis0(struct node *T,char flag);
-void semantic_Analysis(struct node *T);
+void DisplaySymbolTable();
+int Semantic_Analysis(struct node* T,int type,int level,char flag,int command);
 void boolExp(struct node *T);
 void Exp(struct node *T);
 void objectCode(struct codenode *head);
