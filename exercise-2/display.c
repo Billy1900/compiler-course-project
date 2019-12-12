@@ -245,7 +245,7 @@ int Semantic_Analysis(struct node* T,int type,int level,char flag,int command)
                     i++;
                 if(command==0){//定义变量
                     while(i<new_table.index){
-                        if(strcmp(new_table.symbols[i].name,T->type_id)==0&&new_table.symbols[i].flag==flag){
+                        if(strcmp(new_table.symbols[i].name,T->type_id)==0 && new_table.symbols[i].flag==flag){
                             if(flag=='V')
                                 printf("ERROR！第%d行：全局变量中出现相同变量名%s\n",T->pos,T->type_id);
                             else if(flag=='F')
@@ -310,9 +310,10 @@ int Semantic_Analysis(struct node* T,int type,int level,char flag,int command)
                 Semantic_Analysis(T->ptr[0],type,level,flag,command);//分析定义列表
                 command=1;
                 Semantic_Analysis(T->ptr[1],type,level+1,flag,command);//分析语句列表
-                DisplaySymbolTable();
                 new_table.index=new_scope.TX[new_scope.top-1];
                 new_scope.top--;
+                if (new_scope.top == 0)
+                  DisplaySymbolTable();
                 break;
             case DEF_LIST:
                 Semantic_Analysis(T->ptr[0],type,level,flag,command);
