@@ -1,6 +1,6 @@
 # Intro
 
-- [Tiny C compiler](https://github.com/o0olele/tiny-c-compiler)
+- [Tiny C compiler](https://github.com/o0olele/tiny-c-compiler)：JS，参考意义不大
 - [8cc C Compiler](https://github.com/rui314/8cc)
 - [9cc C compiler](https://github.com/rui314/9cc)
 - [chibicc](https://github.com/rui314/chibicc)
