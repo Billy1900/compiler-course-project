@@ -1,6 +1,6 @@
 # Intro
 
-- [Tiny C compiler](https://github.com/o0olele/tiny-c-compiler)：using Javascript
+- [Tiny C compiler](https://github.com/o0olele/tiny-c-compiler)：using Javascript, maybe not useful
 - [8cc C Compiler](https://github.com/rui314/8cc): too complex
 - [9cc C compiler](https://github.com/rui314/9cc): too complex
 - [chibicc](https://github.com/rui314/chibicc): too complex
