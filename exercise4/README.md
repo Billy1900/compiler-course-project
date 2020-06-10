@@ -3,6 +3,7 @@
 
 # How to make it work?
 Input file: inter.txt
+
 Output file: demo.asm
 ```
 g++ main.cpp -o test4
