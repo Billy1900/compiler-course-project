@@ -16,3 +16,8 @@ bison -d -v parser.y//生成parser.tab.h, parser.tab.c
 gcc display.c semantic_analysis.c parser.tab.c lex.yy.c -lfl -o test3
 ./test3 test3.c
 ```
+
+# Issue
+test3.c 可能会报错: unexpected TYPE. 
+
+test3.c是fact程序，官方要求的是fibo程序，由于时间久远，要花很多时间去检查建立的语法树，所以建议测试案例换成官方的fibo，这样应该不会报错
